@@ -1,5 +1,7 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
+Config = Config or {}
+Config.Notify = Config.Notify ~= false -- Set to false to disable notifications when toggling blackout mode
 -- Command to toggle blackout
 QBCore.Commands.Add('blackouttoggle', 'Toggle blackout mode', {}, false, function(source)
     local src = source
@@ -15,9 +17,11 @@ QBCore.Commands.Add('blackouttoggle', 'Toggle blackout mode', {}, false, functio
     exports['qb-weathersync']:setBlackout(not currentState)
     
     -- Notify player
-    if not currentState then
-        TriggerClientEvent('QBCore:Notify', src, 'Blackout enabled!', 'success')
-    else
-        TriggerClientEvent('QBCore:Notify', src, 'Blackout disabled!', 'success')
+    if Config.Notify then
+        if not currentState then
+            TriggerClientEvent('QBCore:Notify', src, 'Blackout enabled!', 'success')
+        else
+            TriggerClientEvent('QBCore:Notify', src, 'Blackout disabled!', 'success')
+        end
     end
 end, 'admin')
