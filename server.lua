@@ -25,3 +25,22 @@ QBCore.Commands.Add('blackouttoggle', 'Toggle blackout mode', {}, false, functio
         end
     end
 end, 'admin')
+
+-- Export to toggle blackout from other scripts
+exports('ToggleBlackout', function(state)
+    if not exports['qb-weathersync'] then
+        print('^1[ERROR] qb-weathersync not found!^7')
+        return false
+    end
+    
+    if state == nil then
+        -- Toggle if no state provided
+        local currentState = exports['qb-weathersync']:getBlackoutState()
+        exports['qb-weathersync']:setBlackout(not currentState)
+        return not currentState
+    else
+        -- Set to specific state
+        exports['qb-weathersync']:setBlackout(state)
+        return state
+    end
+end)
