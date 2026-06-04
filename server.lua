@@ -2,6 +2,12 @@ local QBCore = exports['qb-core']:GetCoreObject()
 
 Config = Config or {}
 Config.Notify = Config.Notify ~= false -- Set to false to disable notifications when toggling blackout mode
+
+-- Function to trigger dramatic lighting effect on all clients
+local function triggerLightingEffect(effectType)
+    TriggerClientEvent('cv-blackout:client:lightingEffect', -1, effectType)
+end
+
 -- Command to toggle blackout
 QBCore.Commands.Add('blackouttoggle', 'Toggle blackout mode', {}, false, function(source)
     local src = source
@@ -14,16 +20,31 @@ QBCore.Commands.Add('blackouttoggle', 'Toggle blackout mode', {}, false, functio
     
     -- Toggle blackout
     local currentState = exports['qb-weathersync']:getBlackoutState()
-    exports['qb-weathersync']:setBlackout(not currentState)
+    local newState = not currentState
     
-    -- Notify player
-    if Config.Notify then
-        if not currentState then
-            TriggerClientEvent('QBCore:Notify', src, 'Blackout enabled!', 'success')
-        else
-            TriggerClientEvent('QBCore:Notify', src, 'Blackout disabled!', 'success')
-        end
+    -- Trigger dramatic effect before toggling
+    if newState then
+        -- Enabling blackout - power failure effect
+        triggerLightingEffect('powerout')
+        TriggerEvent('InteractSound_SV:PlayOnAll', 'blackoutoff', Config.volume)
+    else
+        -- Disabling blackout - power restore effect
+        triggerLightingEffect('powerrestore')
     end
+    
+    -- Small delay for dramatic effect
+    Citizen.SetTimeout(900, function()
+        exports['qb-weathersync']:setBlackout(newState)
+        
+        -- Notify player
+        if Config.Notify and src then
+            if newState then
+                TriggerClientEvent('QBCore:Notify', src, 'Blackout enabled! The city goes dark...', 'success')
+            else
+                TriggerClientEvent('QBCore:Notify', src, 'Blackout disabled! Power restored!', 'success')
+            end
+        end
+    end)
 end, 'admin')
 
 -- Export to toggle blackout from other scripts
@@ -33,16 +54,27 @@ exports('ToggleBlackout', function(state)
         return false
     end
     
+    local newState
     if state == nil then
         -- Toggle if no state provided
         local currentState = exports['qb-weathersync']:getBlackoutState()
-        exports['qb-weathersync']:setBlackout(not currentState)
-        return not currentState
+        newState = not currentState
     else
-        -- Set to specific state
-        exports['qb-weathersync']:setBlackout(state)
-        return state
+        newState = state
     end
+    
+    -- Trigger dramatic effect
+    if newState then
+        triggerLightingEffect('powerout')
+    else
+        triggerLightingEffect('powerrestore')
+    end
+    
+    Citizen.SetTimeout(500, function()
+        exports['qb-weathersync']:setBlackout(newState)
+    end)
+    
+    return newState
 end)
 
 -- Event to toggle blackout from other scripts
@@ -57,15 +89,26 @@ RegisterNetEvent('cv-blackout:server:toggle', function()
     end
     
     local currentState = exports['qb-weathersync']:getBlackoutState()
-    exports['qb-weathersync']:setBlackout(not currentState)
+    local newState = not currentState
     
-    if Config.Notify and src then
-        if not currentState then
-            TriggerClientEvent('QBCore:Notify', src, 'Blackout enabled!', 'success')
-        else
-            TriggerClientEvent('QBCore:Notify', src, 'Blackout disabled!', 'success')
-        end
+    -- Trigger dramatic effect
+    if newState then
+        triggerLightingEffect('powerout')
+    else
+        triggerLightingEffect('powerrestore')
     end
+    
+    Citizen.SetTimeout(500, function()
+        exports['qb-weathersync']:setBlackout(newState)
+        
+        if Config.Notify and src then
+            if newState then
+                TriggerClientEvent('QBCore:Notify', src, 'Blackout enabled! The city goes dark...', 'success')
+            else
+                TriggerClientEvent('QBCore:Notify', src, 'Blackout disabled! Power restored!', 'success')
+            end
+        end
+    end)
 end)
 
 RegisterNetEvent('cv-blackout:server:set', function(state)
@@ -78,15 +121,24 @@ RegisterNetEvent('cv-blackout:server:set', function(state)
         return
     end
     
-    exports['qb-weathersync']:setBlackout(state)
-    
-    if Config.Notify and src then
-        if state then
-            TriggerClientEvent('QBCore:Notify', src, 'Blackout enabled!', 'success')
-        else
-            TriggerClientEvent('QBCore:Notify', src, 'Blackout disabled!', 'success')
-        end
+    -- Trigger dramatic effect
+    if state then
+        triggerLightingEffect('powerout')
+    else
+        triggerLightingEffect('powerrestore')
     end
+    
+    Citizen.SetTimeout(500, function()
+        exports['qb-weathersync']:setBlackout(state)
+        
+        if Config.Notify and src then
+            if state then
+                TriggerClientEvent('QBCore:Notify', src, 'Blackout enabled! The city goes dark...', 'success')
+            else
+                TriggerClientEvent('QBCore:Notify', src, 'Blackout disabled! Power restored!', 'success')
+            end
+        end
+    end)
 end)
 
 print('^2[CV-BLACKOUT] Script loaded successfully!^7')
