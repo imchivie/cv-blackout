@@ -44,3 +44,49 @@ exports('ToggleBlackout', function(state)
         return state
     end
 end)
+
+-- Event to toggle blackout from other scripts
+RegisterNetEvent('cv-blackout:server:toggle', function()
+    local src = source
+    
+    if not exports['qb-weathersync'] then
+        if Config.Notify and src then
+            TriggerClientEvent('QBCore:Notify', src, 'qb-weathersync not found!', 'error')
+        end
+        return
+    end
+    
+    local currentState = exports['qb-weathersync']:getBlackoutState()
+    exports['qb-weathersync']:setBlackout(not currentState)
+    
+    if Config.Notify and src then
+        if not currentState then
+            TriggerClientEvent('QBCore:Notify', src, 'Blackout enabled!', 'success')
+        else
+            TriggerClientEvent('QBCore:Notify', src, 'Blackout disabled!', 'success')
+        end
+    end
+end)
+
+RegisterNetEvent('cv-blackout:server:set', function(state)
+    local src = source
+    
+    if not exports['qb-weathersync'] then
+        if Config.Notify and src then
+            TriggerClientEvent('QBCore:Notify', src, 'qb-weathersync not found!', 'error')
+        end
+        return
+    end
+    
+    exports['qb-weathersync']:setBlackout(state)
+    
+    if Config.Notify and src then
+        if state then
+            TriggerClientEvent('QBCore:Notify', src, 'Blackout enabled!', 'success')
+        else
+            TriggerClientEvent('QBCore:Notify', src, 'Blackout disabled!', 'success')
+        end
+    end
+end)
+
+print('^2[CV-BLACKOUT] Script loaded successfully!^7')
