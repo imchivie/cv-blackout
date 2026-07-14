@@ -58,7 +58,7 @@ local function powerRestoreEffect()
     SetArtificialLightsState(true)
     Wait(100)
     
-    -- manest7a9ich camera shake fil power restore
+    -- manest7a9ich camera shake fil power restore // u can add if u want ..
 
     -- Small screen shake for dramatic effect
     -- ShakeGameplayCam('SMALL_EXPLOSION_SHAKE', 0.15)

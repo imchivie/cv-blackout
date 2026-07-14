@@ -1,6 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
-author 'imchevie'
+author 'imchivie'
+github 'https://github.com/imchivie'
 description 'Simple blackout toggle script for QB-WeatherSync with dramatic sound/effects'
 version '1.1.0'
 
@@ -14,4 +15,8 @@ client_script {
 
 shared_script {
     'config.lua'
+}
+escrow_ignore {
+    'config.lua',
+    'sounds/*'
 }
