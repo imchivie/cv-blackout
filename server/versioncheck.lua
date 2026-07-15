@@ -245,3 +245,17 @@ local function displayBanner()
     print('^2╚═══════════════════════════════════════════════════════════════════════╝^0')
 
 end
+
+-- Wait for update check to complete before printing banner
+Citizen.CreateThread(function()
+    checkForUpdates()
+    
+    -- if my math is mathing it will wait up to 3 seconds for the HTTP request to complete
+    local timeout = 0
+    while updateMessage == nil and timeout < 30 do
+        Citizen.Wait(100)
+        timeout = timeout + 1
+    end
+    
+    displayBanner()
+end)

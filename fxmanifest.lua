@@ -6,12 +6,12 @@ description 'Simple blackout toggle script for QB-WeatherSync with dramatic soun
 version '1.1.1'
 
 server_script {
-    'server.lua',
-    'versioncheck.lua'
+    'server/server.lua',
+    'server/versioncheck.lua'
 }
 
 client_script {
-    'client.lua'
+    'client/client.lua'
 }
 
 shared_script {
