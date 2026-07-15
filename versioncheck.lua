@@ -52,7 +52,7 @@ local function checkForUpdates()
     if not Config.checkUpdates then
         updateMessage = nil
         return
-    
+    end
     PerformHttpRequest('https://api.github.com/repos/imchivie/cv-blackout/releases/latest', function(err, text, headers)
         if err == 200 then
             local data = json.decode(text)
@@ -65,7 +65,7 @@ local function checkForUpdates()
                     -- split verison to parts (exp: 1.3.2 -> {1,3,2})
                     local function splitVersion(str)
                         local parts = {}
-                        for part in string.gmatch(str,"%d+") do
+                        for part in string.gmatch(str, "%d+") do
                             table.insert(parts, tonumber(part))
                         end
                         return parts
@@ -77,7 +77,7 @@ local function checkForUpdates()
                     for i = 1, math.max(#v1parts, #v2parts) do
                         local num1 = v1parts[i] or 0
                         local num2 = v2parts[i] or 0
-                        if num1  ~= num2 then 
+                        if num1 ~= num2 then
                             return num1 < num2
                         end
                     end
@@ -96,16 +96,44 @@ local function checkForUpdates()
                     updateMessage = "Running latest version"
                     updateUrl = nil
                 end
-            
-            elseif err == 404 then
-                updateMessage = "No release found on GitHub yet"
-                updateUrl = nil
-            else
-                if Config.Debug then
-                    updateMessage = string.format("Error checking for updates: (http %s)", err)
-                end
             end
+        elseif err == 404 then
+            updateMessage = "No release found on GitHub yet"
+            updateUrl = nil
+        else
+            if Config.Debug then
+                updateMessage = string.format("Error checking for updates: (http %s)", err)
+            end
+        
         end
     end, 'GET')
+end
+
+local function displayBanner()
+
+    print('^1╔═══════════════════════════════════════════════════════════════════════╗^0')
+    print('^1║                                                                       ║^0')
+    print('^1║     ___  _  _     ____  __      __    ___  _  _  _____  __  __  ____  ║^0')
+    print('^1║    / __)( \\/ )___(  _ \\(  )    /__\\  / __)( )/ )(  _  )(  )(  )(_  _) ║^0')
+    print('^1║   ( (__  \\  /(___)) _ < )(__  /(__)\\( (__  )  (  )(_)(  )(__)(   )(   ║^0')
+    print('^1║    \\___)  \\/     (____/(____)(__)(__)\\___)(_)\\_)(_____)(______) (__)  ║^0')
+    print('^1║                                                                       ║^0')
+    
+    -- display version with color 
+    local versionLine = string.format("CV-Blackout %s - blackout script by @imchivie", CV_VERSION)
+    if isCustomVersion then
+        versionLine = versionLine .. " ^3(CUSTOM)^0"
     end
+    
+    local versionLength = #versionLine
+    local versionPadding = 71 - versionLength
+    local leftVersionPad = math.floor(versionPadding / 2)
+    local rightVersionPad = versionPadding - leftVersionPad
+
+    print(('^2║%s%s%s^2║^0'):format(
+        string.rep(" ", leftVersionPad),
+        versionLine,
+        string.rep(" ", rightVersionPad)
+    ))
+
 end
