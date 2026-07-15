@@ -173,6 +173,40 @@ local function displayBanner()
                     string.rep(" ", rightUrlPad)
                 ))
             end
+        elseif updateMessage:find("custom version") then
+            messageColor = "^5" -- cyan
+            -- Wrap long custom version message
+            local cleanMsg = updateMessage:gsub("%^%d", "")
+            local wrappedLines wrapText(cleanMsg, 63)
+
+            for _, line in ipairs(wrappedLines) do
+                
+                local padding = 71 - #line
+                local leftPad = math.floor(padding / 2)
+                local rightPad = padding - leftPad
+                print(('^2║%s%s%s%s^2║^0'):format(
+                    string.rep(" ", leftPad),
+                    messageColor,
+                    line,
+                    string.rep(" ", rightPad)
+                ))
+            
+            end
+
+            -- display URL for custom version too
+            if updateUrl then
+                local urlLength = #updateUrl
+                local urlPadding = 71 - urlLength
+                local leftUrlPad = math.floor(urlPadding / 2)
+                local rightUrlPad = urlPadding - leftUrlPad
+                
+                print(('^2║%s%s%s%s^2║^0'):format(
+                    string.rep(" ", leftUrlPad),
+                    "^6",
+                    updateUrl,
+                    string.rep(" ", rightUrlPad)
+                ))
+            end
         end
         
     end
