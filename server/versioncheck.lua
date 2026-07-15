@@ -88,8 +88,8 @@ local function checkForUpdates()
                     updateMessage = string.format("New version available: %s (current: %s)", latestVersion, CV_VERSION)
                     updateUrl = "https://github.com/imchivie/cv-blackout/releases"
                     isCustomVersion = false
-                elseif currnetVersion ~= latestVersion then
-                    updateMessge = string.format("You are running your custom version of cv-blackout. The latest official release is: %s", latestVersion)
+                elseif currentVersion ~= latestVersion then
+                    updateMessage = string.format("You are running your custom version of cv-blackout. The latest official release is: %s", latestVersion)
                     updateUrl = "https://github.com/imchivie/cv-blackout/releases"
                     isCustomVersion = true
                 else
@@ -110,13 +110,13 @@ end
 
 local function displayBanner()
 
-    print('^1╔═══════════════════════════════════════════════════════════════════════╗^0')
-    print('^1║                                                                       ║^0')
-    print('^1║     ___  _  _     ____  __      __    ___  _  _  _____  __  __  ____  ║^0')
-    print('^1║    / __)( \\/ )___(  _ \\(  )    /__\\  / __)( )/ )(  _  )(  )(  )(_  _) ║^0')
-    print('^1║   ( (__  \\  /(___)) _ < )(__  /(__)\\( (__  )  (  )(_)(  )(__)(   )(   ║^0')
-    print('^1║    \\___)  \\/     (____/(____)(__)(__)\\___)(_)\\_)(_____)(______) (__)  ║^0')
-    print('^1║                                                                       ║^0')
+    print('^2╔═══════════════════════════════════════════════════════════════════════╗^0')
+    print('^2║                                                                       ║^0')
+    print('^2║     ___  _  _     ____  __      __    ___  _  _  _____  __  __  ____  ║^0')
+    print('^2║    / __)( \\/ )___(  _ \\(  )    /__\\  / __)( )/ )(  _  )(  )(  )(_  _) ║^0')
+    print('^2║   ( (__  \\  /(___)) _ < )(__  /(__)\\( (__  )  (  )(_)(  )(__)(   )(   ║^0')
+    print('^2║    \\___)  \\/     (____/(____)(__)(__)\\___)(_)\\_)(_____)(______) (__)  ║^0')
+    print('^2║                                                                       ║^0')
     
     -- display version with color 
     local versionLine = string.format("CV-Blackout %s - blackout script by @imchivie", CV_VERSION)
@@ -127,16 +127,22 @@ local function displayBanner()
     local versionLength = #versionLine
     local versionPadding = 71 - versionLength
     local leftVersionPad = math.floor(versionPadding / 2)
-    local rightVersionPad = versionPadding - leftVersionPad
-
-    print(('^2║%s%s%s^2║^0'):format(
-        string.rep(" ", leftVersionPad),
-        versionLine,
-        string.rep(" ", rightVersionPad)
-    ))
-
+    local rightVersionPad = versionPadding - leftVersionPad 
+    if isCustomVersion then 
+        print(('^2║%s%s%s^2   ║^0'):format(
+            string.rep(" ", leftVersionPad),
+            versionLine,
+            string.rep(" ", rightVersionPad)
+        ))
+    else
+        print(('^2║%s%s%s^2║^0'):format(
+            string.rep(" ", leftVersionPad),
+            versionLine,
+            string.rep(" ", rightVersionPad)
+        ))
+    end
     -- Add update message if exists
-    if updateMessge then 
+    if updateMessage then 
         print('^2║                                                                       ║^0')
         -- color code the message
         local messageColor = "^2"
@@ -177,10 +183,9 @@ local function displayBanner()
             messageColor = "^5" -- cyan
             -- Wrap long custom version message
             local cleanMsg = updateMessage:gsub("%^%d", "")
-            local wrappedLines wrapText(cleanMsg, 63)
+            local wrappedLines = wrapText(cleanMsg, 63)
 
             for _, line in ipairs(wrappedLines) do
-                
                 local padding = 71 - #line
                 local leftPad = math.floor(padding / 2)
                 local rightPad = padding - leftPad
@@ -190,7 +195,6 @@ local function displayBanner()
                     line,
                     string.rep(" ", rightPad)
                 ))
-            
             end
 
             -- display URL for custom version too
