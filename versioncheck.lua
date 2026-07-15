@@ -83,7 +83,20 @@ local function checkForUpdates()
                     end
                     return false
                 end
-                
+
+                if isVersionLess(currentVersion, latestVersion) then
+                    updateMessage = string.format("New version available: %s (current: %s)", latestVersion, CV_VERSION)
+                    updateUrl = "https://github.com/imchivie/cv-blackout/releases"
+                    isCustomVersion = false
+                elseif currnetVersion ~= latestVersion then
+                    updateMessge = string.format("You are running your custom version of cv-blackout. The latest official release is: %s", latestVersion)
+                    updateUrl = "https://github.com/imchivie/cv-blackout/releases"
+                    isCustomVersion = true
+                else
+                    updateMessage = "Running latest version"
+                    updateUrl = nil
+                end
+             
             end
         end
     end, 'GET')
