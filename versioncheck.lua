@@ -46,3 +46,12 @@ local function wrapText(text, maxLength)
     
     return lines
 end
+
+
+local function checkForUpdates()
+    if not Config.checkUpdates then
+        updateMessage = nil
+        return
+    end
+
+end
