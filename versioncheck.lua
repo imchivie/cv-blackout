@@ -52,6 +52,15 @@ local function checkForUpdates()
     if not Config.checkUpdates then
         updateMessage = nil
         return
+    
+    PerformHttpRequest('https://api.github.com/repos/imchivie/cv-blackout/releases/latest', function(err, text, headers)
+        if err == 200 then
+            local data = json.decode(text)
+            if data and data.tag_name then
+                local latestVersion = data.tag_name:lower():gsub('v', '')
+                local currentVersion = CV_VERSION:lower()
+            end
+        end
+    end, 'GET')
     end
-
 end
