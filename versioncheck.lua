@@ -70,8 +70,20 @@ local function checkForUpdates()
                         end
                         return parts
                     end
-                
+                    
+                    local v1parts = splitVersion(v1)
+                    local v2parts = splitVersion(v2)
+                    
+                    for i = 1, math.max(#v1parts, #v2parts) do
+                        local num1 = v1parts[i] or 0
+                        local num2 = v2parts[i] or 0
+                        if num1  ~= num2 then 
+                            return num1 < num2
+                        end
+                    end
+                    return false
                 end
+                
             end
         end
     end, 'GET')
