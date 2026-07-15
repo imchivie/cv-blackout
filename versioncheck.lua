@@ -207,7 +207,41 @@ local function displayBanner()
                     string.rep(" ", rightUrlPad)
                 ))
             end
+        elseif updateMessage:find("Running latest") then
+            messageColor = "^2" -- green
+            
+            local cleanMsg = updateMessage
+            local msgLength = #cleanMsg
+            local msgPadding = 71 - msgLength
+            local leftMsgPad = math.floor(msgPadding / 2)
+            local rightMsgPad = msgPadding - leftMsgPad
+            
+            print(('^2║%s%s%s%s^2║^0'):format(
+                string.rep(" ", leftMsgPad),
+                messageColor,
+                cleanMsg,
+                string.rep(" ", rightMsgPad)
+            ))
+        else
+            -- handle other messages (errors, etc.)
+             local cleanMsg = updateMessage:gsub("%^%d", "")
+            local wrappedLines = wrapText(cleanMsg, 63)
+            
+            for _, line in ipairs(wrappedLines) do
+                local padding = 71 - #line
+                local leftPad = math.floor(padding / 2)
+                local rightPad = padding - leftPad
+                print(('^2║%s%s%s%s^2║^0'):format(
+                    string.rep(" ", leftPad),
+                    "^1",
+                    line,
+                    string.rep(" ", rightPad)
+                ))
+            end
         end
         
     end
+    print('^2║                                                                       ║^0')
+    print('^2╚═══════════════════════════════════════════════════════════════════════╝^0')
+
 end
