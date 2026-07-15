@@ -96,7 +96,14 @@ local function checkForUpdates()
                     updateMessage = "Running latest version"
                     updateUrl = nil
                 end
-             
+            
+            elseif err == 404 then
+                updateMessage = "No release found on GitHub yet"
+                updateUrl = nil
+            else
+                if Config.Debug then
+                    updateMessage = string.format("Error checking for updates: (http %s)", err)
+                end
             end
         end
     end, 'GET')
