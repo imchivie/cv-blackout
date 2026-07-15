@@ -104,7 +104,6 @@ local function checkForUpdates()
             if Config.Debug then
                 updateMessage = string.format("Error checking for updates: (http %s)", err)
             end
-        
         end
     end, 'GET')
 end
@@ -136,4 +135,31 @@ local function displayBanner()
         string.rep(" ", rightVersionPad)
     ))
 
+    -- Add update message if exists
+    if updateMessge then 
+        print('^2║                                                                       ║^0')
+        -- color code the message
+        local messageColor = "^2"
+
+        if updateMessage:find("New version available") then
+            messageColor = "^3" -- yellow
+
+            -- Display the update message
+
+            local cleanMsg = updateMessage
+            local msgLength = #cleanMsg
+            local msgPadding = 71 - msgLength
+            local leftMsgPad = math.floor(msgPadding /2)
+            local rightMsgPad = msgPadding - leftMsgPad
+
+            print(('^2║%s%s%s%s^2║^0'):format(
+                string.rep(" ", leftMsgPad),
+                messageColor,
+                cleanMsg,
+                string.rep(" ", rightMsgPad)
+            ))
+
+        end
+        
+    end
 end
