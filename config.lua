@@ -1,6 +1,7 @@
 Config = {}
 
 Config.Notify = false -- Set to false to disable notifications when toggling blackout mode
+Config.checkUpdates  = true -- Set to false to disable update checking
 
 -- Effect settings
 Config.Effects = {
