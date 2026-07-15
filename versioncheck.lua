@@ -159,6 +159,20 @@ local function displayBanner()
                 string.rep(" ", rightMsgPad)
             ))
 
+            -- Display the URL if it exists
+            if updateUrl then
+                local urlLength = #updateUrl
+                local urlPadding = 71 - urlLength
+                local leftUrlPad = math.floor(urlPadding / 2)
+                local rightUrlPad = urlPadding - leftUrlPad
+
+                print(('^2║%s%s%s%s^2║^0'):format(
+                    string.rep(" ", leftUrlPad),
+                    "^6", -- Orange color for URL
+                    updateUrl,
+                    string.rep(" ", rightUrlPad)
+                ))
+            end
         end
         
     end
