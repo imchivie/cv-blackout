@@ -59,6 +59,19 @@ local function checkForUpdates()
             if data and data.tag_name then
                 local latestVersion = data.tag_name:lower():gsub('v', '')
                 local currentVersion = CV_VERSION:lower()
+
+                -- Simple version comparison 
+                local function isVersionLess(v1, v2)
+                    -- split verison to parts (exp: 1.3.2 -> {1,3,2})
+                    local function splitVersion(str)
+                        local parts = {}
+                        for part in string.gmatch(str,"%d+") do
+                            table.insert(parts, tonumber(part))
+                        end
+                        return parts
+                    end
+                
+                end
             end
         end
     end, 'GET')
